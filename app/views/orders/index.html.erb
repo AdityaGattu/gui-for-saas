@@ -1,0 +1,27 @@
+<body>
+  <div class="AddOrder">
+    <div class="DisplayOrder">
+      <div class="DisplayOrder-welcome">
+        <h1>Your Orders</h1>
+      </div>
+      <% Order.show_orders.where(user_id: @current_user.id).each do |order|%>
+        <div class="DisplayOrder-card">
+          <div class="DisplayOrder-container">
+            <div class="Displaymainitem">Order id: <b><%=order.id.to_s%></b></div>
+            <div class="Displayitem"><b><p class="insideitem1">Order time:  <%= order.order_date.to_s(:long)%></p></b></div>
+            <div class="Displayitem"><b><p class="insideitem2">Delivery status: <%= (order.delivered_at==nil) ?  "Delivery in progress" : "Delivered at #{order.delivered_at.to_s(:long)}" %></p></div>
+            <%if order.delivered_at != nil%>
+              <%= form_with(url: "/orders/#{order.id}", method:"delete") do %>
+                <%= submit_tag "received?" , class: "AddItem-button"%>
+              <%end%>
+              <%= form_with(url: "/orders/complain", method:"post") do %>
+                <%= hidden_field_tag 'id', order.id %>
+                <%= submit_tag "complain" , class: "AddItem-button"%>
+              <%end%>
+            <%end%>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</body>
